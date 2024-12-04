@@ -3,10 +3,12 @@ import { ReactP5Wrapper } from '@p5-wrapper/react';
 
 const DrawingCanvas = ({ color, opacity, size }) => {
   function sketch(p5) {
-    p5.setup = () => p5.createCanvas(800, 600, p5.WEBGL);
+    p5.setup = () => {
+      p5.createCanvas(800, 600, p5.WEBGL);
+      p5.background(255);
+    };
 
     p5.draw = () => {
-      background(255);
     };
 
     p5.mouseDragged = () => {
