@@ -22,7 +22,7 @@ const App = () => {
   return (
     <div className='flex min-h-screen'>
       <LeftSidebar />
-      <main className='flex-1 mx-40 p-4'>
+      <main className='flex-1 mx-40'>
         <DrawingCanvas
           color={color}
           opacity={opacity}
