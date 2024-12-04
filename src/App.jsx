@@ -14,8 +14,9 @@ const RightSidebar = () => (
 );
 
 const App = () => {
-  const [color, setColor] = React.useState([0, 0, 0, 1]);
-  const [size, setSize] = React.useState(5);
+  const [color, setColor] = React.useState([255, 0, 0]);
+  const [opacity, setOpacity] = React.useState(10);
+  const [size, setSize] = React.useState(50);
   const [isDrawing, setIsDrawing] = React.useState(false);
 
   return (
@@ -24,6 +25,7 @@ const App = () => {
       <main className='flex-1 mx-40 p-4'>
         <DrawingCanvas
           color={color}
+          opacity={opacity}
           size={size}
           setIsDrawing={setIsDrawing}
         />
