@@ -1,4 +1,5 @@
 import React from 'react';
+import DrawingCanvas from './DrawingCanvas';
 
 const LeftSidebar = () => (
   <aside className='w-40 min-h-screen bg-gray-200 p-4 fixed left-0'>
@@ -12,20 +13,24 @@ const RightSidebar = () => (
   </aside>
 );
 
-const DrawingCanvas = () => (
-  <div className='bg-white p-4 rounded-lg shadow-lg'>
-    Drawing Canvas Goes Here
-  </div>
-);
+const App = () => {
+  const [color, setColor] = React.useState([0, 0, 0, 1]);
+  const [size, setSize] = React.useState(5);
+  const [isDrawing, setIsDrawing] = React.useState(false);
 
-const App = () => (
-  <div className='flex min-h-screen'>
-    <LeftSidebar />
-    <main className='flex-1 mx-40 p-4'>
-      <DrawingCanvas />
-    </main>
-    <RightSidebar />
-  </div>
-);
+  return (
+    <div className='flex min-h-screen'>
+      <LeftSidebar />
+      <main className='flex-1 mx-40 p-4'>
+        <DrawingCanvas
+          color={color}
+          size={size}
+          setIsDrawing={setIsDrawing}
+        />
+      </main>
+      <RightSidebar />
+    </div>
+  );
+};
 
 export default App;
