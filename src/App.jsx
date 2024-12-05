@@ -12,7 +12,7 @@ const App = () => {
 
   return (
     <div className='flex min-h-screen'>
-      <LeftSidebar />
+      <LeftSidebar setSize={setSize} setOpacity={setOpacity}/>
       <main className='flex-1'>
         <DrawingCanvas
           color={color}

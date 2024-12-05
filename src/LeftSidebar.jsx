@@ -1,18 +1,18 @@
 import React from "react";
+import VerticalSlider from "./VerticalSlider";
 
-function openLeftSideBar() {
-    document.getElementById("leftSideBar").style.width = "250px";
+const LeftSidebar = ({setSize, setOpacity}) => {
+    return (
+        <div className="h-max">
+            <aside id='leftSideBar' name="leftSideBar" className='w-40 h-max min-h-full bg-gray-400 p-4 fixed left-0 rounded-md items-center'>
+                {/*<a href="javascript:void(0)" className="closebtn" onClick="closeLeftSideBar()">&times;</a>*/}
+                <div className="flex grid h-max">
+                    <VerticalSlider onChange={setSize} sliderName="BrushSize" sliderLabel="Brush Size" maxValue="100" step="1"/>
+                    <VerticalSlider onChange={setOpacity} sliderName="BrushOpacity" sliderLabel="Brush Opacity" maxValue="100" step="1" />
+                </div>
+            </aside>
+        </div>
+    );
 }
-
-function closeLeftSidebar() {
-    document.getElementById("leftSideBar").style.width = "0";
-}
-
-const LeftSidebar = () => (
-    <aside id='leftSideBar' className='w-40 min-h-screen bg-gray-400 p-4 fixed left-0 rounded-md items-center border-2'>
-        <a href="javascript:void(0)" className="closebtn" onClick="closeLeftSideBar()">&times;</a>
-        Free Tacos From Amazon
-    </aside>
-);
 
 export default LeftSidebar;

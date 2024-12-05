@@ -5,3 +5,5 @@ const RightSidebar = () => (
         Right Sidebar
     </aside>
 );
+
+export default RightSidebar;
