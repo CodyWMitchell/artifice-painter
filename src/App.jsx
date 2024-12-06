@@ -1,17 +1,8 @@
 import React from 'react';
 import DrawingCanvas from './DrawingCanvas';
+import LeftSidebar from './LeftSidebar.jsx';
+import RightSidebar from './RightSidebar.jsx';
 
-const LeftSidebar = () => (
-  <aside className='w-40 h-screen bg-gray-200 p-4 fixed left-0 top-0 z-1'>
-    Left Sidebar
-  </aside>
-);
-
-const RightSidebar = () => (
-  <aside className='w-40 h-screen bg-gray-200 p-4 fixed right-0 top-0 z-10'>
-    Right Sidebar
-  </aside>
-);
 
 const App = () => {
   const [color, setColor] = React.useState([255, 0, 0]);
@@ -21,7 +12,7 @@ const App = () => {
 
   return (
     <div className='flex min-h-screen'>
-      <LeftSidebar />
+      <LeftSidebar setSize={setSize} setOpacity={setOpacity}/>
       <main className='flex-1'>
         <DrawingCanvas
           color={color}
