@@ -1,5 +1,5 @@
-import React from 'react';
-import VerticalSlider from './VerticalSlider';
+import VerticalSlider from "./VerticalSlider";
+import PropTypes from "prop-types";
 
 const LeftSidebar = ({ setSize, setOpacity }) => {
   return (
@@ -13,14 +13,12 @@ const LeftSidebar = ({ setSize, setOpacity }) => {
           <VerticalSlider
             onChange={setSize}
             sliderName='BrushSize'
-            sliderLabel='size'
             maxValue='500'
             step='1'
           />
           <VerticalSlider
             onChange={setOpacity}
             sliderName='BrushOpacity'
-            sliderLabel='opacity'
             maxValue='100'
             step='1'
           />
@@ -30,4 +28,9 @@ const LeftSidebar = ({ setSize, setOpacity }) => {
   );
 };
 
+
+LeftSidebar.propTypes = {
+    setSize: PropTypes.func.isRequired,
+    setOpacity: PropTypes.func.isRequired
+}
 export default LeftSidebar;
