@@ -8,17 +8,16 @@ const VerticalSlider = ({sliderLabel, sliderName, onChange, maxValue, step}) => 
         onChange(change.target.value)
     }
     return (
-        // remove border later - for troubleshooting formatting
-        <div className='w-full h-max col-auto text-center border border-solid border-black'>
-            <input className='scale-150 grow -rotate-90 w-full h-80 align-middle cursor-pointer accent-gray-600 range-sm '
+        <div className='flex flex-col col-auto text-center items-center py-2 scale-150 my-8 mx-4'>
+            <input className='slider grow w-full align-middle cursor-pointer accent-white range-sm '
                    type="range"
+                   orient="vertical"
                    min="0"
                    max={maxValue}
                    onChange={handleChange}
                    name={sliderName}
                    step={step}
             />
-            <label className='font-medium' htmlFor={sliderName}>{sliderLabel}</label>
         </div>
     )
 }
