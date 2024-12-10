@@ -4,6 +4,7 @@ const VerticalSlider = ({sliderName, onChange, maxValue, step}) => {
     const handleChange = (change) => {
         // this calls either setSize or setOpacity depending on which one was passed
         onChange(change.target.value)
+        console.log(change.target.value)
     }
     return (
         <div className='flex flex-col col-auto text-center items-center py-2 scale-150 my-8 mx-4'>
@@ -21,7 +22,6 @@ const VerticalSlider = ({sliderName, onChange, maxValue, step}) => {
 }
 
 VerticalSlider.propTypes = {
-    sliderLabel: PropTypes.string.isRequired,
     sliderName: PropTypes.string.isRequired,
     maxValue: PropTypes.number,
     min: PropTypes.number,

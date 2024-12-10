@@ -1,11 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import p5 from 'p5';
 
-const DrawingCanvas = ({
-  color = [0, 0, 0],
-  opacity = 255,
-  size = 10,
-}) => {
+const DrawingCanvas = ({ color = [0, 0, 0], opacity = 255, size = 10 }) => {
   const canvasRef = useRef(null);
   const sketchRef = useRef({
     currentColor: color,
@@ -16,7 +12,7 @@ const DrawingCanvas = ({
   useEffect(() => {
     sketchRef.current = {
       currentColor: color,
-      currentOpacity: opacity,
+      currentOpacity: Number(opacity),
       currentSize: size,
     };
   }, [color, opacity, size]);
@@ -29,12 +25,15 @@ const DrawingCanvas = ({
       let lastMouseX, lastMouseY;
       const CANVAS_WIDTH = 800;
       const CANVAS_HEIGHT = 600;
-      let drawingBuffer;
+      let drawingBuffer = null;
+      let strokeBuffer = null;
 
       p.setup = () => {
         p.createCanvas(window.innerWidth, window.innerHeight);
         drawingBuffer = p.createGraphics(CANVAS_WIDTH, CANVAS_HEIGHT);
+        strokeBuffer = p.createGraphics(CANVAS_WIDTH, CANVAS_HEIGHT);
         drawingBuffer.background(255);
+        strokeBuffer.background(255, 255);
 
         pan.x = (window.innerWidth - CANVAS_WIDTH) / 2;
         pan.y = (window.innerHeight - CANVAS_HEIGHT) / 2;
@@ -53,39 +52,20 @@ const DrawingCanvas = ({
         p.translate(pan.x, pan.y);
         p.scale(zoom);
 
-        p.image(drawingBuffer, 0, 0);
+        if (drawingBuffer) {
+          p.image(drawingBuffer, 0, 0);
+        }
+        if (strokeBuffer) {
+          p.push();
+          p.tint(255, sketchRef.current.currentOpacity);
+          p.image(strokeBuffer, 0, 0);
+          p.pop();
+        }
 
         p.stroke(200);
         p.strokeWeight(1 / zoom);
         p.noFill();
         p.rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-        if (p.mouseIsPressed && !isDragging) {
-          const world = screenToWorld(p.mouseX, p.mouseY);
-
-          if (
-            world.x >= 0 &&
-            world.x <= CANVAS_WIDTH &&
-            world.y >= 0 &&
-            world.y <= CANVAS_HEIGHT
-          ) {
-            const {
-              currentColor,
-              currentOpacity,
-              currentSize,
-            } = sketchRef.current;
-
-            const centerX = world.x;
-            const centerY = world.y;
-            drawingBuffer.fill(
-              currentColor[0],
-              currentColor[1],
-              currentColor[2],
-            );
-            drawingBuffer.noStroke();
-            drawingBuffer.ellipse(centerX, centerY, currentSize, currentSize);
-          }
-        }
 
         p.pop();
       };
@@ -95,12 +75,37 @@ const DrawingCanvas = ({
           isDragging = true;
           lastMouseX = p.mouseX;
           lastMouseY = p.mouseY;
+        } else {
+          const world = screenToWorld(p.mouseX, p.mouseY);
+          const { currentColor, currentOpacity, currentSize } =
+            sketchRef.current;
+
+          if (strokeBuffer) {
+            strokeBuffer.fill(
+              currentColor[0],
+              currentColor[1],
+              currentColor[2]
+            );
+            strokeBuffer.noStroke();
+            strokeBuffer.ellipse(world.x, world.y, currentSize, currentSize);
+          }
         }
       };
 
       p.mouseReleased = () => {
         if (p.mouseButton === p.CENTER) {
           isDragging = false;
+        } else {
+          const { currentColor, currentOpacity, currentSize } =
+            sketchRef.current;
+
+          if (drawingBuffer && strokeBuffer) {
+            drawingBuffer.push();
+            drawingBuffer.tint(255, currentOpacity);
+            drawingBuffer.image(strokeBuffer, 0, 0);
+            drawingBuffer.pop();
+            strokeBuffer.clear();
+          }
         }
       };
 
@@ -112,6 +117,20 @@ const DrawingCanvas = ({
           pan.y += dy;
           lastMouseX = p.mouseX;
           lastMouseY = p.mouseY;
+        } else {
+          const world = screenToWorld(p.mouseX, p.mouseY);
+          const { currentColor, currentOpacity, currentSize } =
+            sketchRef.current;
+
+          if (strokeBuffer) {
+            strokeBuffer.fill(
+              currentColor[0],
+              currentColor[1],
+              currentColor[2]
+            );
+            strokeBuffer.noStroke();
+            strokeBuffer.ellipse(world.x, world.y, currentSize, currentSize);
+          }
         }
       };
 

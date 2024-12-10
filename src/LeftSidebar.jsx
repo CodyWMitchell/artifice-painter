@@ -13,14 +13,14 @@ const LeftSidebar = ({ setSize, setOpacity }) => {
           <VerticalSlider
             onChange={setSize}
             sliderName='BrushSize'
-            maxValue='500'
-            step='1'
+            maxValue={500}
+            step={1}
           />
           <VerticalSlider
             onChange={setOpacity}
             sliderName='BrushOpacity'
-            maxValue='100'
-            step='1'
+            maxValue={255}
+            step={1}
           />
         </div>
       </aside>
