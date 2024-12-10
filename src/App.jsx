@@ -5,7 +5,7 @@ import RightSidebar from './RightSidebar.jsx';
 
 
 const App = () => {
-  const [color, setColor] = React.useState([255, 0, 0]);
+  const [color, setColor] = React.useState([0, 0, 0]);
   const [opacity, setOpacity] = React.useState(10);
   const [size, setSize] = React.useState(50);
   const [isDrawing, setIsDrawing] = React.useState(false);
