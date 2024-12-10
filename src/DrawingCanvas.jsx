@@ -5,14 +5,12 @@ const DrawingCanvas = ({
   color = [0, 0, 0],
   opacity = 255,
   size = 10,
-  hardness = 1,
 }) => {
   const canvasRef = useRef(null);
   const sketchRef = useRef({
     currentColor: color,
     currentOpacity: opacity,
     currentSize: size,
-    currentHardness: hardness,
   });
 
   useEffect(() => {
@@ -20,9 +18,8 @@ const DrawingCanvas = ({
       currentColor: color,
       currentOpacity: opacity,
       currentSize: size,
-      currentHardness: hardness,
     };
-  }, [color, opacity, size, hardness]);
+  }, [color, opacity, size]);
 
   useEffect(() => {
     const sketch = (p) => {
@@ -76,27 +73,17 @@ const DrawingCanvas = ({
               currentColor,
               currentOpacity,
               currentSize,
-              currentHardness,
             } = sketchRef.current;
 
             const centerX = world.x;
             const centerY = world.y;
-            const radius = currentSize / 2;
-            const steps = 100; // Number of gradient steps for smoothness
-
-            for (let i = 0; i <= steps; i++) {
-              const alpha = currentOpacity * (1 - i / steps) * currentHardness;
-              const r = (i / steps) * radius;
-
-              drawingBuffer.fill(
-                currentColor[0],
-                currentColor[1],
-                currentColor[2],
-                alpha
-              );
-              drawingBuffer.noStroke();
-              drawingBuffer.ellipse(centerX, centerY, r * 2, r * 2);
-            }
+            drawingBuffer.fill(
+              currentColor[0],
+              currentColor[1],
+              currentColor[2],
+            );
+            drawingBuffer.noStroke();
+            drawingBuffer.ellipse(centerX, centerY, currentSize, currentSize);
           }
         }
 
