@@ -70,7 +70,10 @@ const DrawingCanvas = ({ color = [0, 0, 0], opacity = 255, size = 10 }) => {
       p.keyPressed = () => {
         if (p.key === ' ') {
           drawingBuffer.background(255);
-          prevWorld = null; // Reset previous position
+          prevWorld = null;
+        }
+        if (p.key === 's') {
+          p.saveCanvas(drawingBuffer, 'myCanvas', 'png');
         }
       };
 
