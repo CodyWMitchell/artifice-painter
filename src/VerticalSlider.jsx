@@ -1,8 +1,6 @@
-import React from "react";
 import PropTypes from 'prop-types';
-import { useState } from "react";
 
-const VerticalSlider = ({sliderLabel, sliderName, onChange, maxValue, step}) => {
+const VerticalSlider = ({sliderName, onChange, maxValue, step}) => {
     const handleChange = (change) => {
         // this calls either setSize or setOpacity depending on which one was passed
         onChange(change.target.value)
@@ -24,6 +22,10 @@ const VerticalSlider = ({sliderLabel, sliderName, onChange, maxValue, step}) => 
 
 VerticalSlider.propTypes = {
     sliderLabel: PropTypes.string.isRequired,
-    sliderName: PropTypes.string.isRequired
+    sliderName: PropTypes.string.isRequired,
+    maxValue: PropTypes.number,
+    min: PropTypes.number,
+    step: PropTypes.number,
+    onChange: PropTypes.func
 }
 export default VerticalSlider;

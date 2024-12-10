@@ -21,7 +21,7 @@ const App = () => {
           setIsDrawing={setIsDrawing}
         />
       </main>
-      <RightSidebar />
+      <RightSidebar color={color} setColor={setColor}/>
     </div>
   );
 };
