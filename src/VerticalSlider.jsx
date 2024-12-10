@@ -11,7 +11,7 @@ const VerticalSlider = ({sliderName, onChange, maxValue, step}) => {
             <input className='slider grow w-full align-middle cursor-pointer accent-white range-sm '
                    type="range"
                    orient="vertical"
-                   min="0"
+                   min="1"
                    max={maxValue}
                    onChange={handleChange}
                    name={sliderName}

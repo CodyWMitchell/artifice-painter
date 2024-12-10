@@ -27,13 +27,14 @@ const DrawingCanvas = ({ color = [0, 0, 0], opacity = 255, size = 10 }) => {
       const CANVAS_HEIGHT = 600;
       let drawingBuffer = null;
       let strokeBuffer = null;
+      let prevWorld = null; // Store the previous world coordinates
 
       p.setup = () => {
         p.createCanvas(window.innerWidth, window.innerHeight);
         drawingBuffer = p.createGraphics(CANVAS_WIDTH, CANVAS_HEIGHT);
         strokeBuffer = p.createGraphics(CANVAS_WIDTH, CANVAS_HEIGHT);
         drawingBuffer.background(255);
-        strokeBuffer.background(255, 255);
+        strokeBuffer.background(255, 0); // Set alpha to 0 for clear background
 
         pan.x = (window.innerWidth - CANVAS_WIDTH) / 2;
         pan.y = (window.innerHeight - CANVAS_HEIGHT) / 2;
@@ -43,6 +44,34 @@ const DrawingCanvas = ({ color = [0, 0, 0], opacity = 255, size = 10 }) => {
         const worldX = (screenX - pan.x) / zoom;
         const worldY = (screenY - pan.y) / zoom;
         return { x: worldX, y: worldY };
+      };
+
+      const interpolatePoints = (x1, y1, x2, y2, spacing) => {
+        const points = [];
+        const distance = p.dist(x1, y1, x2, y2);
+        const numPoints = Math.ceil(distance / spacing);
+
+        for (let i = 0; i <= numPoints; i++) {
+          const t = numPoints === 0 ? 0 : i / numPoints;
+          const x = p.lerp(x1, x2, t);
+          const y = p.lerp(y1, y2, t);
+          points.push({ x, y });
+        }
+
+        return points;
+      };
+
+      const drawPoint = (buffer, x, y, color, size) => {
+        buffer.fill(color[0], color[1], color[2]);
+        buffer.noStroke();
+        buffer.ellipse(x, y, size, size);
+      };
+
+      p.keyPressed = () => {
+        if (p.key === ' ') {
+          drawingBuffer.background(255);
+          prevWorld = null; // Reset previous position
+        }
       };
 
       p.draw = () => {
@@ -77,17 +106,17 @@ const DrawingCanvas = ({ color = [0, 0, 0], opacity = 255, size = 10 }) => {
           lastMouseY = p.mouseY;
         } else {
           const world = screenToWorld(p.mouseX, p.mouseY);
-          const { currentColor, currentOpacity, currentSize } =
-            sketchRef.current;
+          prevWorld = world; // Set initial position
 
           if (strokeBuffer) {
-            strokeBuffer.fill(
-              currentColor[0],
-              currentColor[1],
-              currentColor[2]
+            const { currentColor, currentSize } = sketchRef.current;
+            drawPoint(
+              strokeBuffer,
+              world.x,
+              world.y,
+              currentColor,
+              currentSize
             );
-            strokeBuffer.noStroke();
-            strokeBuffer.ellipse(world.x, world.y, currentSize, currentSize);
           }
         }
       };
@@ -96,8 +125,7 @@ const DrawingCanvas = ({ color = [0, 0, 0], opacity = 255, size = 10 }) => {
         if (p.mouseButton === p.CENTER) {
           isDragging = false;
         } else {
-          const { currentColor, currentOpacity, currentSize } =
-            sketchRef.current;
+          const { currentOpacity } = sketchRef.current;
 
           if (drawingBuffer && strokeBuffer) {
             drawingBuffer.push();
@@ -106,6 +134,7 @@ const DrawingCanvas = ({ color = [0, 0, 0], opacity = 255, size = 10 }) => {
             drawingBuffer.pop();
             strokeBuffer.clear();
           }
+          prevWorld = null; // Reset previous position
         }
       };
 
@@ -119,18 +148,31 @@ const DrawingCanvas = ({ color = [0, 0, 0], opacity = 255, size = 10 }) => {
           lastMouseY = p.mouseY;
         } else {
           const world = screenToWorld(p.mouseX, p.mouseY);
-          const { currentColor, currentOpacity, currentSize } =
-            sketchRef.current;
+          const { currentColor, currentSize } = sketchRef.current;
 
-          if (strokeBuffer) {
-            strokeBuffer.fill(
-              currentColor[0],
-              currentColor[1],
-              currentColor[2]
+          if (strokeBuffer && prevWorld) {
+            const spacing = currentSize * 0.2;
+            const points = interpolatePoints(
+              prevWorld.x,
+              prevWorld.y,
+              world.x,
+              world.y,
+              spacing
             );
-            strokeBuffer.noStroke();
-            strokeBuffer.ellipse(world.x, world.y, currentSize, currentSize);
+
+            // Draw all interpolated points
+            points.forEach((point) => {
+              drawPoint(
+                strokeBuffer,
+                point.x,
+                point.y,
+                currentColor,
+                currentSize
+              );
+            });
           }
+
+          prevWorld = world; // Update previous position
         }
       };
 
